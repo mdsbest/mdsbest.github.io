@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             loadPost(slug);
         } else {
             // No slug parameter, redirect to homepage
-            window.location.href = '/docs/';
+            window.location.href = '../';
         }
     }
 });
@@ -31,7 +31,7 @@ async function loadPost(slug) {
         
         if (!post) {
             // Post not found, redirect to 404
-            window.location.href = '/docs/404.html';
+            window.location.href = '../404.html';
             return;
         }
         
@@ -78,7 +78,7 @@ async function loadRelatedPosts(currentPostSlug) {
         relatedPosts.forEach(post => {
             const li = document.createElement('li');
             li.innerHTML = `
-                <a href="/docs/post.html?slug=${post.slug}" class="related-post-title">${post.title}</a>
+                <a href="post.html?slug=${post.slug}" class="related-post-title">${post.title}</a>
                 <span class="related-post-date">${formatDate(post.date)}</span>
             `;
             relatedPostsList.appendChild(li);

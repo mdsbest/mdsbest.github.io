@@ -54,19 +54,19 @@ function createPostCard(post) {
     const categoriesHtml = post.categories.map(cat => `<span class="post-card-category">${cat}</span>`).join(', ');
     
     card.innerHTML = `
-        <a href="/docs/post.html?slug=${post.slug}">
+        <a href="templates/post.html?slug=${post.slug}">
             <img src="${post.image}" alt="${post.title}" class="post-card-image">
         </a>
         <div class="post-card-content">
             <h3 class="post-card-title">
-                <a href="/docs/post.html?slug=${post.slug}">${post.title}</a>
+                <a href="templates/post.html?slug=${post.slug}">${post.title}</a>
             </h3>
             <div class="post-card-meta">
                 <span class="post-card-date">${formattedDate}</span>
                 <span class="post-card-categories">${categoriesHtml}</span>
             </div>
             <p class="post-card-excerpt">${post.excerpt}</p>
-            <a href="/docs/post.html?slug=${post.slug}" class="btn">Read More</a>
+            <a href="templates/post.html?slug=${post.slug}" class="btn">Read More</a>
         </div>
     `;
     
