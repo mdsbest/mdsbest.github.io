@@ -20,18 +20,25 @@ document.addEventListener('DOMContentLoaded', function() {
 /**
  * Load recent posts on the homepage
  */
-function loadRecentPosts() {
-    const postsContainer = document.getElementById('posts-container');
-    const allPosts = getAllPosts();
-    
-    // Sort posts by date (newest first)
-    const sortedPosts = [...allPosts].sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    // Display the posts
-    sortedPosts.forEach(post => {
-        const postCard = createPostCard(post);
-        postsContainer.appendChild(postCard);
-    });
+async function loadRecentPosts() {
+    try {
+        const postsContainer = document.getElementById('posts-container');
+        const allPosts = await getAllPosts();
+        
+        // Sort posts by date (newest first)
+        const sortedPosts = [...allPosts].sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        // Display the posts
+        sortedPosts.forEach(post => {
+            const postCard = createPostCard(post);
+            postsContainer.appendChild(postCard);
+        });
+    } catch (error) {
+        console.error('Error loading posts:', error);
+        document.getElementById('posts-container').innerHTML = `
+            <p class="error">Failed to load posts. Please try again later.</p>
+        `;
+    }
 }
 
 /**
@@ -47,19 +54,19 @@ function createPostCard(post) {
     const categoriesHtml = post.categories.map(cat => `<span class="post-card-category">${cat}</span>`).join(', ');
     
     card.innerHTML = `
-        <a href="/post.html?slug=${post.slug}">
+        <a href="/docs/post.html?slug=${post.slug}">
             <img src="${post.image}" alt="${post.title}" class="post-card-image">
         </a>
         <div class="post-card-content">
             <h3 class="post-card-title">
-                <a href="/post.html?slug=${post.slug}">${post.title}</a>
+                <a href="/docs/post.html?slug=${post.slug}">${post.title}</a>
             </h3>
             <div class="post-card-meta">
                 <span class="post-card-date">${formattedDate}</span>
                 <span class="post-card-categories">${categoriesHtml}</span>
             </div>
             <p class="post-card-excerpt">${post.excerpt}</p>
-            <a href="/post.html?slug=${post.slug}" class="btn">Read More</a>
+            <a href="/docs/post.html?slug=${post.slug}" class="btn">Read More</a>
         </div>
     `;
     
