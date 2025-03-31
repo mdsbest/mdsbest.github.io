@@ -9,10 +9,10 @@ const path = require('path');
 const config = require('./config');
 
 // Paths
-const postsJsonPath = path.join(__dirname, '..', 'docs', 'database', 'posts.json');
-const postsOutputDir = path.join(__dirname, '..', 'docs', 'posts');
+const postsJsonPath = path.join(__dirname, '..', '_database', 'posts.json');
+const postsOutputDir = path.join(__dirname, '..', 'posts');
 const postsIndexPath = path.join(postsOutputDir, 'index.html');
-const mainIndexPath = path.join(__dirname, '..', 'docs', 'index.html');
+const mainIndexPath = path.join(__dirname, '..', 'index.html');
 
 // GitHub raw image URL base with placeholders from config
 const IMAGE_BASE_URL = `https://raw.githubusercontent.com/${config.github.organization}/${config.github.repository}/refs/heads/${config.github.branch}/images/`;
@@ -62,7 +62,7 @@ const createPostCard = (post) => {
 const createPostPage = (post) => {
   // Create the category links
   const categoryLinks = post.categories.map(category => 
-    `<a href="/categories/${category}">${category}</a>`
+    `<a href="/categories/${category.toLowerCase()}" class="post-category">${category}</a>`
   ).join(', ');
 
   // Create the HTML content
@@ -72,20 +72,21 @@ const createPostPage = (post) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${post.title}</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>${post.title} | Devin Schumacher</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
   <meta name="description" content="${post.excerpt}">
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <div class="container">
-      <h1 class="site-title"><a href="/">My Blog</a></h1>
-      <nav>
+      <a href="/" class="site-logo">Devin Schumacher</a>
+      <nav class="site-nav">
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/posts">Posts</a></li>
           <li><a href="/categories">Categories</a></li>
           <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -106,9 +107,9 @@ const createPostPage = (post) => {
     </article>
   </main>
 
-  <footer>
+  <footer class="site-footer">
     <div class="container">
-      <p>&copy; <span id="current-year"></span> My Blog. All rights reserved.</p>
+      <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
       <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
     </div>
   </footer>
@@ -117,55 +118,29 @@ const createPostPage = (post) => {
   `;
 };
 
-/**
- * Creates posts directory and generated HTML files for each post
- * @param {Array} posts - List of post objects from posts.json
- */
-const generatePostsFiles = (posts) => {
-  // Create posts directory if it doesn't exist
-  if (!fs.existsSync(postsOutputDir)) {
-    fs.mkdirSync(postsOutputDir, { recursive: true });
-  }
-
-  // Generate individual post pages
-  posts.forEach(post => {
-    const postHtml = createPostPage(post);
-    const postPath = path.join(postsOutputDir, `${post.slug}.html`);
-    fs.writeFileSync(postPath, postHtml);
-    console.log(`Created: ${postPath}`);
-    
-    // Also create a directory with index.html for clean URLs
-    const postDir = path.join(postsOutputDir, post.slug);
-    if (!fs.existsSync(postDir)) {
-      fs.mkdirSync(postDir, { recursive: true });
-    }
-    
-    const postIndexPath = path.join(postDir, 'index.html');
-    fs.writeFileSync(postIndexPath, postHtml);
-    console.log(`Created: ${postIndexPath} (for clean URL)`);
-  });
-  
-  // Generate index page for posts
-  const postsIndexHtml = `
+// Generate index page HTML for posts
+const generatePostsIndexHtml = (posts) => {
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Posts</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>All Posts | Devin Schumacher</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
   <meta name="description" content="Browse all blog posts">
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <div class="container">
-      <h1 class="site-title"><a href="/">My Blog</a></h1>
-      <nav>
+      <a href="/" class="site-logo">Devin Schumacher</a>
+      <nav class="site-nav">
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/posts">Posts</a></li>
           <li><a href="/categories">Categories</a></li>
           <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -178,43 +153,65 @@ const generatePostsFiles = (posts) => {
     </div>
   </main>
 
-  <footer>
+  <footer class="site-footer">
     <div class="container">
-      <p>&copy; <span id="current-year"></span> My Blog. All rights reserved.</p>
+      <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
       <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
     </div>
   </footer>
 </body>
 </html>
   `;
+};
+
+// Update main index HTML with recent posts
+const updateMainIndexHtml = () => {
+  // Read the current index.html
+  let mainIndexHtml = fs.readFileSync(mainIndexPath, 'utf8');
   
-  const postsIndexPath = path.join(postsOutputDir, 'index.html');
-  fs.writeFileSync(postsIndexPath, postsIndexHtml);
-  console.log(`Created: ${postsIndexPath}`);
+  // Generate recent posts HTML (limit to 6 posts)
+  const recentPostsHtml = sortedPosts.slice(0, 6)
+    .map(post => createPostCard(post))
+    .join('\n');
+  
+  // Replace the posts-container div content
+  const postsContainerRegex = /<div id="posts-container" class="posts-grid">([\s\S]*?)<\/div>/;
+  mainIndexHtml = mainIndexHtml.replace(postsContainerRegex, `<div id="posts-container" class="posts-grid">\n${recentPostsHtml}\n</div>`);
+  
+  return mainIndexHtml;
 };
 
 // Generate and write all post files
 console.log('Generating post files...');
 let totalGenerated = 0;
 
-// Generate individual post files
+// Generate individual post files using the folder method
 sortedPosts.forEach(post => {
   const postHtml = createPostPage(post);
-  const postPath = path.join(postsOutputDir, `${post.slug}.html`);
   
-  fs.writeFileSync(postPath, postHtml);
+  // Create a directory for each post
+  const postDir = path.join(postsOutputDir, post.slug);
+  if (!fs.existsSync(postDir)) {
+    fs.mkdirSync(postDir, { recursive: true });
+  }
+  
+  // Write the index.html file inside the post directory
+  const postIndexPath = path.join(postDir, 'index.html');
+  fs.writeFileSync(postIndexPath, postHtml);
   totalGenerated++;
-  console.log(`Generated: ${post.slug}.html`);
+  console.log(`Generated: ${post.slug}/index.html`);
 });
 
 // Generate posts index page
 console.log('Generating posts index page...');
-const postsIndexHtml = generatePostsFiles(sortedPosts);
+const postsIndexHtml = generatePostsIndexHtml(sortedPosts);
 fs.writeFileSync(postsIndexPath, postsIndexHtml);
+console.log('Generated posts index page');
 
 // Update main index page
 console.log('Updating main index page...');
 const mainIndexHtml = updateMainIndexHtml();
 fs.writeFileSync(mainIndexPath, mainIndexHtml);
+console.log('Updated main index page');
 
 console.log(`Done! Generated ${totalGenerated} post files.`); 

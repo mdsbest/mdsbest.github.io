@@ -1,7 +1,7 @@
 /**
  * Generate Static Category Pages
- * This script generates static HTML files for all categories and their individual pages
- * based on the posts in the database.
+ * This script generates HTML pages for each category
+ * and a category index page listing all categories.
  */
 
 const fs = require('fs');
@@ -9,29 +9,12 @@ const path = require('path');
 const config = require('./config');
 
 // Paths
-const postsJsonPath = path.join(__dirname, '..', 'docs', 'database', 'posts.json');
-const categoriesOutputDir = path.join(__dirname, '..', 'docs', 'categories');
-const categoriesIndexPath = path.join(categoriesOutputDir, 'index.html');
-const categoryTemplatePath = path.join(__dirname, '..', 'docs', 'templates', 'category.html');
-const categoriesIndexTemplatePath = path.join(__dirname, '..', 'docs', 'templates', 'categories-index.html');
-
-// GitHub raw image URL base with placeholders from config
-const IMAGE_BASE_URL = `https://raw.githubusercontent.com/${config.github.organization}/${config.github.repository}/refs/heads/${config.github.branch}/images/`;
-
-// Read template files
-const categoryTemplate = fs.readFileSync(categoryTemplatePath, 'utf8');
-const categoriesIndexTemplate = fs.readFileSync(categoriesIndexTemplatePath, 'utf8');
-
-// Read the posts data
-const postsData = JSON.parse(fs.readFileSync(postsJsonPath, 'utf8'));
-const posts = postsData.posts;
-
-// Sort posts by date (newest first)
-const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+const postsJsonPath = path.join(__dirname, '..', '_database', 'posts.json');
+const categoriesDir = path.join(__dirname, '..', 'categories');
 
 // Create the categories directory if it doesn't exist
-if (!fs.existsSync(categoriesOutputDir)) {
-  fs.mkdirSync(categoriesOutputDir, { recursive: true });
+if (!fs.existsSync(categoriesDir)) {
+  fs.mkdirSync(categoriesDir, { recursive: true });
 }
 
 /**
@@ -81,20 +64,21 @@ const generateCategoryPage = (category, posts) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${category} - My Blog</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>${category} - Devin Schumacher</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
   <meta name="description" content="Posts about ${category}">
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <div class="container">
-      <h1 class="site-title"><a href="/">My Blog</a></h1>
-      <nav>
+      <a href="/" class="site-logo">Devin Schumacher</a>
+      <nav class="site-nav">
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/posts">Posts</a></li>
           <li><a href="/categories">Categories</a></li>
           <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -109,9 +93,9 @@ const generateCategoryPage = (category, posts) => {
     </div>
   </main>
 
-  <footer>
+  <footer class="site-footer">
     <div class="container">
-      <p>&copy; <span id="current-year"></span> My Blog. All rights reserved.</p>
+      <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
       <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
     </div>
   </footer>
@@ -151,20 +135,21 @@ const generateCategoriesIndexPage = (categories) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Categories - My Blog</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Categories - Devin Schumacher</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
   <meta name="description" content="Browse blog posts by category">
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <div class="container">
-      <h1 class="site-title"><a href="/">My Blog</a></h1>
-      <nav>
+      <a href="/" class="site-logo">Devin Schumacher</a>
+      <nav class="site-nav">
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/posts">Posts</a></li>
           <li><a href="/categories">Categories</a></li>
           <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -177,9 +162,9 @@ const generateCategoriesIndexPage = (categories) => {
     </div>
   </main>
 
-  <footer>
+  <footer class="site-footer">
     <div class="container">
-      <p>&copy; <span id="current-year"></span> My Blog. All rights reserved.</p>
+      <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
       <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
     </div>
   </footer>
@@ -204,8 +189,8 @@ const generateCategoryPages = () => {
     console.log(`Found ${posts.length} posts to categorize`);
 
     // Create categories directory if it doesn't exist
-    if (!fs.existsSync(categoriesOutputDir)) {
-      fs.mkdirSync(categoriesOutputDir, { recursive: true });
+    if (!fs.existsSync(categoriesDir)) {
+      fs.mkdirSync(categoriesDir, { recursive: true });
     }
 
     // Get all unique categories
@@ -218,7 +203,7 @@ const generateCategoryPages = () => {
       const categoryHtml = generateCategoryPage(category, posts);
       
       // Create a directory for the category and place an index.html file in it for clean URLs
-      const categoryDirPath = path.join(categoriesOutputDir, categorySlug);
+      const categoryDirPath = path.join(categoriesDir, categorySlug);
       if (!fs.existsSync(categoryDirPath)) {
         fs.mkdirSync(categoryDirPath, { recursive: true });
       }
@@ -226,15 +211,11 @@ const generateCategoryPages = () => {
       const categoryFilePath = path.join(categoryDirPath, 'index.html');
       fs.writeFileSync(categoryFilePath, categoryHtml);
       console.log(`Generated category page for '${category}' at ${categoryFilePath}`);
-      
-      // Also create the old-style .html file for backward compatibility
-      const categoryHtmlPath = path.join(categoriesOutputDir, `${categorySlug}.html`);
-      fs.writeFileSync(categoryHtmlPath, categoryHtml);
     });
 
     // Generate categories index page
     const categoriesIndexHtml = generateCategoriesIndexPage(categories);
-    const categoriesIndexPath = path.join(categoriesOutputDir, 'index.html');
+    const categoriesIndexPath = path.join(categoriesDir, 'index.html');
     fs.writeFileSync(categoriesIndexPath, categoriesIndexHtml);
     console.log(`Generated categories index page at ${categoriesIndexPath}`);
 

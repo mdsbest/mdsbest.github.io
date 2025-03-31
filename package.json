@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Static blog website with clean URLs",
   "scripts": {
-    "start": "node utils/dev-server.js",
-    "convert": "node utils/convert-md-to-posts.js",
-    "build:posts": "node utils/generate-static-posts.js",
-    "build:categories": "node utils/generate-static-category-pages.js",
+    "start": "node ./_utils/dev-server.js",
+    "dev": "node ./_utils/dev-server.js",
+    "convert": "node ./_utils/convert-md-to-posts.js",
+    "build:posts": "node ./_utils/generate-static-posts.js",
+    "build:categories": "node ./_utils/generate-static-category-pages.js",
     "build": "pnpm build:posts && pnpm build:categories"
   },
   "author": "Devin Schumacher",

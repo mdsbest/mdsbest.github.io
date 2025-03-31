@@ -1,6 +1,6 @@
 /**
  * Simple development server with URL rewriting
- * Run with: node utils/dev-server.js
+ * Run with: node _utils/dev-server.js
  */
 const express = require('express');
 const path = require('path');
@@ -14,7 +14,15 @@ console.log(`Starting development server for ${config.site.title}`);
 console.log(`Repository: ${config.github.organization}/${config.github.repository}`);
 
 // Directory to serve static files from
-const staticDir = path.join(__dirname, '..', 'docs');
+const staticDir = path.join(__dirname, '..');
+
+// Ignore directories that start with underscore
+app.use((req, res, next) => {
+  if (req.path.match(/^\/_/)) {
+    return res.status(404).send('Not found');
+  }
+  next();
+});
 
 // First, serve static assets directly
 app.use(express.static(staticDir));

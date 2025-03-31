@@ -11,16 +11,21 @@ This repository contains the code for my personal website and blog, hosted on Gi
 - `docs/` - The main directory containing all website files (GitHub Pages deploys from this directory)
   - `assets/` - CSS, JavaScript, and image files
   - `database/` - JSON data files containing blog post content
-  - `posts/` - Generated HTML files for individual blog posts
-  - `categories/` - Generated HTML files for category listings
-  - `templates/` - HTML templates for posts and categories
+  - `posts/` - Generated post directories, each containing an index.html file
+    - `post-slug/` - Directory for each post
+      - `index.html` - Post content file
+  - `categories/` - Generated category directories, each containing an index.html file 
+    - `category-name/` - Directory for each category
+      - `index.html` - Category page content file
   - Various HTML files (index.html, about.html, contact.html, etc.)
 - `utils/` - Utility scripts and tools
   - `generate-static-posts.js` - Generate static HTML files for posts
   - `generate-static-category-pages.js` - Generate static HTML files for categories
   - `config.js` - Configuration settings for the site
   - `dev-server.js` - Development server with clean URL support
+  - `convert-md-to-posts.js` - Convert markdown files to posts.json entries
 - `images/` - Repository-level images that can be referenced using raw GitHub URLs
+- `content/` - Source content files in markdown format
 
 ## Configuration
 
@@ -54,8 +59,8 @@ pnpm build
 ```
 
 This will:
-- Generate individual HTML files for each post in the `docs/posts/` directory
-- Generate category pages in the `docs/categories/` directory
+- Generate individual post directories with index.html files in the `docs/posts/` directory
+- Generate category directories with index.html files in the `docs/categories/` directory
 - Update the posts index page (`docs/posts/index.html`) with links to all posts
 - Update the main index page (`docs/index.html`) to show recent posts
 
@@ -71,7 +76,9 @@ pnpm build:categories
 
 ## Adding New Posts
 
-To add new blog posts:
+### From JSON
+
+To add new blog posts directly:
 
 1. Edit the `docs/database/posts.json` file and add a new post entry with the following format:
 
@@ -83,7 +90,7 @@ To add new blog posts:
   "date": "2023-06-15",
   "categories": ["category1", "category2"],
   "excerpt": "A brief excerpt of your post",
-  "image": "assets/images/your-image.jpg",
+  "image": "https://raw.githubusercontent.com/username/repo/branch/images/your-image.jpg",
   "content": "<p>Your HTML content here</p>"
 }
 ```
@@ -95,11 +102,36 @@ To add new blog posts:
 pnpm build
 ```
 
-4. Commit and push your changes to deploy to GitHub Pages
+### From Markdown
+
+You can also convert markdown files to posts:
+
+1. Place your markdown files in the `content/` directory
+2. Run the conversion script:
+
+```bash
+pnpm run convert
+```
+
+3. Run the build script to generate HTML files:
+
+```bash
+pnpm build
+```
+
+## Clean URLs
+
+This site uses "clean URLs" (no .html extension). Instead of `/posts/post-name.html`, URLs are structured as `/posts/post-name/`. This is achieved by:
+
+1. Creating a directory for each post and category
+2. Placing an `index.html` file within each directory
+3. Configuring the development server to serve these files correctly
+
+This provides better SEO and a cleaner user experience.
 
 ## Local Development
 
-To run the website locally with clean URLs (no .html extensions):
+To run the website locally with clean URLs:
 
 ```bash
 # Start the development server
@@ -107,17 +139,9 @@ pnpm start
 ```
 
 This will:
-- Start a local development server at http://localhost:8080
+- Start a local development server at http://localhost:3000
 - Support clean URLs (e.g., /about instead of /about.html)
 - Automatically serve index.html files for directory paths
-
-## Templates
-
-The site uses HTML templates with placeholder values:
-
-- `docs/templates/post.html` - Template for individual post pages
-- `docs/templates/category.html` - Template for individual category pages
-- `docs/templates/categories-index.html` - Template for the categories index page
 
 ## Images
 

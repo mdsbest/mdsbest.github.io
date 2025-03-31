@@ -1,6 +1,6 @@
 /**
  * Convert Markdown Files to posts.json
- * This script reads markdown files from content/company/comparisons,
+ * This script reads markdown files from _content/company/comparisons,
  * converts them to HTML, and creates a posts.json file from them
  */
 
@@ -8,14 +8,14 @@ const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 const marked = require('marked');
-const config = require('./config');
+const config = require('./_utils/config');
 const https = require('https');
 const http = require('http');
 const { URL } = require('url');
 
 // Source and target paths
-const markdownDir = path.join(__dirname, '..', 'content', 'company', 'comparisons');
-const postsJsonPath = path.join(__dirname, '..', 'docs', 'database', 'posts.json');
+const markdownDir = path.join(__dirname, '..', '_content', 'company', 'comparisons');
+const postsJsonPath = path.join(__dirname, '..', '_database', 'posts.json');
 const imagesDir = path.join(__dirname, '..', 'images');
 
 // Ensure images directory exists
