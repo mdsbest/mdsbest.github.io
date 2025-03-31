@@ -11,7 +11,7 @@ async function loadDatabase() {
   if (database) return database;
   
   try {
-    const response = await fetch('/database/posts.json');
+    const response = await fetch('database/posts.json');
     if (!response.ok) {
       throw new Error(`Failed to load database: ${response.status}`);
     }

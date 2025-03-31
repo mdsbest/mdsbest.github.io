@@ -78,7 +78,7 @@ async function loadRelatedPosts(currentPostSlug) {
         relatedPosts.forEach(post => {
             const li = document.createElement('li');
             li.innerHTML = `
-                <a href="post.html?slug=${post.slug}" class="related-post-title">${post.title}</a>
+                <a href="../templates/post.html?slug=${post.slug}" class="related-post-title">${post.title}</a>
                 <span class="related-post-date">${formatDate(post.date)}</span>
             `;
             relatedPostsList.appendChild(li);

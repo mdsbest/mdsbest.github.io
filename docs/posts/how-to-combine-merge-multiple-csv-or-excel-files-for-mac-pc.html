@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Combine/Merge Multiple CSV or Excel Files for Mac & PC | Devin Schumacher</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/post.css">
+    <meta name="description" content="A step-by-step guide on how to combine multiple CSV or Excel files on both Mac and PC.">
+    <meta property="og:title" content="How to Combine/Merge Multiple CSV or Excel Files for Mac & PC">
+    <meta property="og:description" content="A step-by-step guide on how to combine multiple CSV or Excel files on both Mac and PC.">
+    <meta property="og:type" content="article">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="../" class="site-logo">Devin Schumacher</a>
+            <nav class="site-nav">
+                <ul>
+                    <li><a href="../">Home</a></li>
+                    <li><a href="../posts/" class="active">Posts</a></li>
+                    <li><a href="../about.html">About</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container post-container">
+        <article class="post">
+            <header class="post-header">
+                <h1>How to Combine/Merge Multiple CSV or Excel Files for Mac & PC</h1>
+                <div class="post-meta">
+                    <time>February 15, 2023</time>
+                    <div class="post-categories"><span class="post-category">productivity</span>, <span class="post-category">data</span></div>
+                </div>
+                <img src="../assets/images/combine-csv.jpg" alt="How to Combine/Merge Multiple CSV or Excel Files for Mac & PC" class="post-featured-image">
+            </header>
+            
+            <div class="post-content">
+                <h2>Introduction to Combining CSV Files</h2>
+
+<p>Working with multiple CSV or Excel files can be challenging when you need to analyze data across all of them. This guide will show you efficient methods to combine these files on both Mac and PC.</p>
+
+<h2>Method 1: Using Excel's Power Query</h2>
+
+<p>Microsoft Excel offers a powerful feature called Power Query that makes combining files simple:</p>
+
+<ol>
+  <li>Open Excel and go to the Data tab</li>
+  <li>Click "Get Data" > "From File" > "From Folder"</li>
+  <li>Select the folder containing your CSV/Excel files</li>
+  <li>Click "Combine & Transform Data"</li>
+  <li>Excel will detect the structure and combine files with similar columns</li>
+</ol>
+
+<h2>Method 2: Using Terminal on Mac</h2>
+
+<p>For command-line enthusiasts on Mac, you can use the Terminal:</p>
+
+<pre><code># For CSV files with headers (keeping only the first header)
+$ head -n 1 file1.csv > combined.csv
+$ for file in *.csv; do tail -n +2 "$file" >> combined.csv; done</code></pre>
+
+<h2>Method 3: Using Python (Cross-Platform)</h2>
+
+<p>Python provides a flexible solution that works on any operating system:</p>
+
+<pre><code>import pandas as pd
+import glob
+
+# Get all CSV files in the directory
+all_files = glob.glob("path/to/your/files/*.csv")
+
+# Combine all files
+combined_df = pd.concat([pd.read_csv(f) for f in all_files])
+
+# Save to a new file
+combined_df.to_csv("combined_output.csv", index=False)</code></pre>
+
+<h2>Conclusion</h2>
+
+<p>Combining CSV or Excel files doesn't have to be complicated. Whether you prefer a graphical interface like Excel or command-line solutions, these methods will save you time when working with multiple data files.</p>
+            </div>
+        </article>
+
+        <aside class="post-sidebar">
+            <div class="related-posts">
+                <h3>Recent Posts</h3>
+                <ul>
+                    <li>
+        <a href="audio-diffusion-ai.html">Audio Diffusion AI - The Future of Sound Generation</a>
+        <span class="post-date">May 20, 2023</span>
+      </li>
+<li>
+        <a href="http-vs-https.html">HTTP vs HTTPS - What's the Difference?</a>
+        <span class="post-date">April 5, 2023</span>
+      </li>
+<li>
+        <a href="how-to-disable-prettier-formatting-for-individual-files-or-folders.html">How to Disable Prettier Formatting for Individual Files or Folders</a>
+        <span class="post-date">March 10, 2023</span>
+      </li>
+<li>
+        <a href="sql-show.html">SQL Show - How to View Tables in MySQL, Postgres, MariaDB</a>
+        <span class="post-date">January 9, 2023</span>
+      </li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

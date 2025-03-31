@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Show - How to View Tables in MySQL, Postgres, MariaDB | Devin Schumacher</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/post.css">
+    <meta name="description" content="Learn how to view and list database tables in MySQL, Postgres, or MariaDB databases from the command line.">
+    <meta property="og:title" content="SQL Show - How to View Tables in MySQL, Postgres, MariaDB">
+    <meta property="og:description" content="Learn how to view and list database tables in MySQL, Postgres, or MariaDB databases from the command line.">
+    <meta property="og:type" content="article">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="../" class="site-logo">Devin Schumacher</a>
+            <nav class="site-nav">
+                <ul>
+                    <li><a href="../">Home</a></li>
+                    <li><a href="../posts/" class="active">Posts</a></li>
+                    <li><a href="../about.html">About</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container post-container">
+        <article class="post">
+            <header class="post-header">
+                <h1>SQL Show - How to View Tables in MySQL, Postgres, MariaDB</h1>
+                <div class="post-meta">
+                    <time>January 9, 2023</time>
+                    <div class="post-categories"><span class="post-category">programming</span>, <span class="post-category">sql</span></div>
+                </div>
+                <img src="../assets/images/sql-show.jpg" alt="SQL Show - How to View Tables in MySQL, Postgres, MariaDB" class="post-featured-image">
+            </header>
+            
+            <div class="post-content">
+                <h2>Introduction to SQL Show Commands</h2>
+
+<p>Successfully working with <a href="https://www.mysql.com/" target="_blank">MySQL</a> databases kind of assumes that you have an idea of what's in your databases, right?</p>
+
+<p>If you're using an application, or some kind of GUI (graphical user interface), it might be as easy as clicking an icon to see what you're working with.</p>
+
+<p>But if you're coming in from the command line, you don't have that luxury.</p>
+
+<p>In this lesson we will see how to view / list database tables in a MySQL, Postgres, or MariaDB database from the command line.</p>
+
+<h2>Connecting to MySQL</h2>
+
+<p>In case you haven't connected to MySQL yet:</p>
+
+<ol>
+  <li>Open Terminal</li>
+  <li>Connect to MySQL server with the following command:</li>
+</ol>
+
+<pre><code>$ mysql -u root -p</code></pre>
+
+<p>When prompted for your password, enter it if you have one.</p>
+
+<p>Chances are if you don't know it - you don't have one. So in that case just press the <code>return</code> key.</p>
+
+<img src="assets/images/logo.png" alt="MySQL Login" />
+
+<p>When connected, you're prompt will change to <code>mysql&gt;</code></p>
+
+<h2>Listing Databases with SHOW DATABASES</h2>
+
+<p>The most obvious starting point is to figure out what databases you have to work with.</p>
+
+<p>To list your databases, use the <code>SHOW</code> statement.</p>
+
+<pre><code># SHOW DATABASES;
+
+mysql> SHOW DATABASES;</code></pre>
+
+<img src="assets/images/mysql-show-databases.png" alt="MySQL Show Databases" />
+
+<p>Switch to your desired databases with the <code>USE</code> statement.</p>
+
+<pre><code># USE &lt;database_name&gt;;
+
+mysql> USE pixeldevs;</code></pre>
+
+<img src="assets/images/mysql-USE-database.png" alt="MySQL Use Database" />
+
+<h2>Viewing Tables with SHOW TABLES</h2>
+
+<p>You're connected and ready to use a specific database.</p>
+
+<p>To see the tables & views in the selected database, use the <code>SHOW</code> statement.</p>
+
+<pre><code># SHOW TABLES;
+
+mysql> SHOW TABLES;</code></pre>
+
+<img src="assets/images/mysql-SHOW-TABLES.png" alt="MySQL Show Tables" />
+
+<h3>Getting More Information with SHOW FULL TABLES</h3>
+
+<p>If you'd like a little more information about the each table's type, add the <code>FULL</code> modifier into your statement.</p>
+
+<pre><code># SHOW FULL TABLES;
+
+mysql> SHOW FULL TABLES;</code></pre>
+
+<img src="assets/images/mysql-SHOW-FULL-TABLES.png" alt="MySQL Show Full Tables" />
+
+<h2>Viewing Tables from a Different Database</h2>
+
+<p>Alternatively, if you don't want to "use" a particular database, you can run the same commands by on different databases, and database tables, by modifying your statement's specificity a bit.</p>
+
+<pre><code># SHOW TABLES FROM &lt;database_name&gt;;
+
+mysql> SHOW TABLES FROM pixelsdevs;</code></pre>
+
+<img src="assets/images/show-tables-FROM.png" alt="MySQL Show Tables From" />
+
+<p>Alternatively you can use the <code>IN</code> clause:</p>
+
+<pre><code># SHOW TABLES IN &lt;database_name&gt;
+
+mysql> SHOW TABLES IN sales_example;
+
+mysql> SHOW TABLES IN pixeldevs;</code></pre>
+
+<img src="assets/images/mysql-SHOW-TABLES-IN.png" alt="MySQL Show Tables In" />
+
+<h2>Conclusion</h2>
+
+<p>The <code>SHOW</code> command in MySQL is a powerful tool for exploring your database structure from the command line. Whether you need to view databases, tables, or get more detailed information, these commands will help you navigate your database environment efficiently.</p>
+
+<p>Remember that all SQL commands in MySQL must end with a semicolon (;) to be executed properly.</p>
+            </div>
+        </article>
+
+        <aside class="post-sidebar">
+            <div class="related-posts">
+                <h3>Recent Posts</h3>
+                <ul>
+                    <li>
+        <a href="audio-diffusion-ai.html">Audio Diffusion AI - The Future of Sound Generation</a>
+        <span class="post-date">May 20, 2023</span>
+      </li>
+<li>
+        <a href="http-vs-https.html">HTTP vs HTTPS - What's the Difference?</a>
+        <span class="post-date">April 5, 2023</span>
+      </li>
+<li>
+        <a href="how-to-disable-prettier-formatting-for-individual-files-or-folders.html">How to Disable Prettier Formatting for Individual Files or Folders</a>
+        <span class="post-date">March 10, 2023</span>
+      </li>
+<li>
+        <a href="how-to-combine-merge-multiple-csv-or-excel-files-for-mac-pc.html">How to Combine/Merge Multiple CSV or Excel Files for Mac & PC</a>
+        <span class="post-date">February 15, 2023</span>
+      </li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

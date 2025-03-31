@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP vs HTTPS - What's the Difference? | Devin Schumacher</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/post.css">
+    <meta name="description" content="Understand the key differences between HTTP and HTTPS and why HTTPS is crucial for modern websites.">
+    <meta property="og:title" content="HTTP vs HTTPS - What's the Difference?">
+    <meta property="og:description" content="Understand the key differences between HTTP and HTTPS and why HTTPS is crucial for modern websites.">
+    <meta property="og:type" content="article">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="../" class="site-logo">Devin Schumacher</a>
+            <nav class="site-nav">
+                <ul>
+                    <li><a href="../">Home</a></li>
+                    <li><a href="../posts/" class="active">Posts</a></li>
+                    <li><a href="../about.html">About</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container post-container">
+        <article class="post">
+            <header class="post-header">
+                <h1>HTTP vs HTTPS - What's the Difference?</h1>
+                <div class="post-meta">
+                    <time>April 5, 2023</time>
+                    <div class="post-categories"><span class="post-category">web</span>, <span class="post-category">security</span></div>
+                </div>
+                <img src="../assets/images/http-vs-https.jpg" alt="HTTP vs HTTPS - What's the Difference?" class="post-featured-image">
+            </header>
+            
+            <div class="post-content">
+                <h2>Understanding HTTP and HTTPS</h2>
+
+<p>HTTP (Hypertext Transfer Protocol) and HTTPS (Hypertext Transfer Protocol Secure) are the foundation of data communication on the web. While they serve the same basic purpose, the security implications are vastly different.</p>
+
+<h2>What is HTTP?</h2>
+
+<p>HTTP is the original protocol used for transmitting web pages. When you visit an HTTP website:</p>
+
+<ul>
+  <li>Data is sent in plaintext</li>
+  <li>No encryption is provided</li>
+  <li>Anyone monitoring the network can read the data</li>
+  <li>No verification of the server's identity is performed</li>
+</ul>
+
+<h2>What is HTTPS?</h2>
+
+<p>HTTPS adds a security layer using SSL/TLS (Secure Sockets Layer/Transport Layer Security) protocols. When you visit an HTTPS website:</p>
+
+<ul>
+  <li>Data is encrypted during transmission</li>
+  <li>The server's identity is verified using certificates</li>
+  <li>Data integrity is maintained (no tampering during transit)</li>
+  <li>The connection is authenticated (you're connecting to the real website)</li>
+</ul>
+
+<h2>Why HTTPS is Essential</h2>
+
+<p>In today's digital landscape, HTTPS is no longer optional:</p>
+
+<ul>
+  <li>Browsers mark HTTP sites as "Not Secure"</li>
+  <li>Google uses HTTPS as a ranking factor</li>
+  <li>Users expect privacy and security</li>
+  <li>Many modern web features require HTTPS</li>
+  <li>Payment processing requires HTTPS compliance</li>
+</ul>
+
+<h2>How to Identify HTTPS Websites</h2>
+
+<p>You can identify HTTPS websites by:</p>
+
+<ul>
+  <li>Looking for "https://" in the URL</li>
+  <li>Finding a padlock icon in the address bar</li>
+  <li>Seeing "Secure" or similar text (depends on browser)</li>
+</ul>
+
+<h2>Conclusion</h2>
+
+<p>The transition from HTTP to HTTPS represents a significant improvement in web security. For website owners, implementing HTTPS is now a standard practice rather than an optional feature, protecting both your visitors and your site's reputation.</p>
+            </div>
+        </article>
+
+        <aside class="post-sidebar">
+            <div class="related-posts">
+                <h3>Recent Posts</h3>
+                <ul>
+                    <li>
+        <a href="audio-diffusion-ai.html">Audio Diffusion AI - The Future of Sound Generation</a>
+        <span class="post-date">May 20, 2023</span>
+      </li>
+<li>
+        <a href="how-to-disable-prettier-formatting-for-individual-files-or-folders.html">How to Disable Prettier Formatting for Individual Files or Folders</a>
+        <span class="post-date">March 10, 2023</span>
+      </li>
+<li>
+        <a href="how-to-combine-merge-multiple-csv-or-excel-files-for-mac-pc.html">How to Combine/Merge Multiple CSV or Excel Files for Mac & PC</a>
+        <span class="post-date">February 15, 2023</span>
+      </li>
+<li>
+        <a href="sql-show.html">SQL Show - How to View Tables in MySQL, Postgres, MariaDB</a>
+        <span class="post-date">January 9, 2023</span>
+      </li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

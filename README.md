@@ -1,39 +1,93 @@
-# Devin Schumacher's Static Website
+# README 
 
-This is a static website for GitHub Pages with no build steps. The site uses vanilla HTML, CSS, and JavaScript.
+A simple, static blog website built with HTML, CSS, and JavaScript.
 
-## Structure
+## Overview
 
-- `index.html` - Homepage
-- `about.html` - About page
-- `contact.html` - Contact page
-- `post.html` - Post template (loads content dynamically)
-- `404.html` - Error page
+This repository contains the code for my personal website and blog, hosted on GitHub Pages. The website is generated using a static site generator script that converts post data from JSON into HTML files.
 
-### Directories
+## Repository Structure
 
-- `posts/` - HTML files for each blog post
-- `assets/` - Static assets
-  - `css/` - Stylesheets
-  - `js/` - JavaScript files
-  - `images/` - Images
+- `docs/` - The main directory containing all website files (GitHub Pages deploys from this directory)
+  - `assets/` - CSS, JavaScript, and image files
+  - `database/` - JSON data files containing blog post content
+  - `posts/` - Generated HTML files for individual blog posts
+  - `templates/` - HTML templates
+  - Various HTML files (index.html, about.html, contact.html, etc.)
+- `generate-static-posts.js` - Node.js script to generate static HTML files from post data
 
-## How It Works
+## How to Use the Static Site Generator
 
-The website uses vanilla JavaScript to load blog posts dynamically:
+The website uses a static site generator script (`generate-static-posts.js`) to create HTML files from post data stored in `docs/database/posts.json`.
 
-1. Post metadata is stored in `assets/js/posts.js`
-2. The homepage loads posts from this metadata
-3. The post template (`post.html`) loads content from individual HTML files in the `posts/` directory
+To generate the site:
 
-## Development
+1. Make sure you have Node.js installed
+2. Run the script:
 
-To add a new post:
+```bash
+node generate-static-posts.js
+```
 
-1. Add the post metadata to `assets/js/posts.js`
-2. Create a new HTML file in the `posts/` directory
-3. Add any images to `assets/images/`
+This will:
+- Generate individual HTML files for each post in the `docs/posts/` directory
+- Update the posts index page (`docs/posts/index.html`) with links to all posts
+- Update the main index page (`docs/index.html`) to show recent posts
 
-## Deployment
+## Adding New Posts
 
-The site is designed to be deployed directly to GitHub Pages without any build steps. 
+To add new blog posts:
+
+1. Edit the `docs/database/posts.json` file and add a new post entry with the following format:
+
+```json
+{
+  "id": 6,
+  "title": "Your Post Title",
+  "slug": "your-post-slug",
+  "date": "2023-06-15",
+  "categories": ["category1", "category2"],
+  "excerpt": "A brief excerpt of your post",
+  "image": "assets/images/your-image.jpg",
+  "content": "<p>Your HTML content here</p>"
+}
+```
+
+2. Add any referenced images to the `docs/assets/images/` directory
+3. Run the static site generator:
+
+```bash
+node generate-static-posts.js
+```
+
+4. Commit and push your changes to deploy to GitHub Pages
+
+## Local Development
+
+To run the website locally:
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/repository-name.git
+```
+
+2. Navigate to the docs directory:
+
+```bash
+cd repository-name/docs
+```
+
+3. Serve the files using a local server. For example, using Python:
+
+```bash
+# Python 3
+python -m http.server
+
+# Python 2
+python -m SimpleHTTPServer
+```
+
+4. Visit `http://localhost:8000` in your browser
+
+
