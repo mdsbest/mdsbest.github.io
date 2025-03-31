@@ -91,3 +91,8 @@ python -m SimpleHTTPServer
 4. Visit `http://localhost:8000` in your browser
 
 
+## Images
+
+If you stores images in your repo like `orgname/reponame/images/*` 
+
+- you can see them at: `
