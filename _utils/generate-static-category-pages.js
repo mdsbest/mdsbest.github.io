@@ -7,6 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('./config');
+const { generatePage } = require('./components');
 
 // Paths
 const postsJsonPath = path.join(__dirname, '..', '_database', 'posts.json');
@@ -37,7 +38,11 @@ const createPostCard = (post) => {
         </h2>
         <div class="post-card-meta">
           <span class="post-card-date">${date}</span>
-          ${post.categories.map(cat => `<span class="post-card-tag">${cat}</span>`).join('')}
+          <span class="post-card-categories">
+            ${post.categories.map(cat => 
+              `<a href="/categories/${cat.toLowerCase()}" class="post-card-category">${cat}</a>`
+            ).join(' ')}
+          </span>
         </div>
         <p class="post-card-excerpt">${post.excerpt}</p>
         <a href="/posts/${post.slug}" class="read-more">Read More</a>
@@ -58,60 +63,20 @@ const generateCategoryPage = (category, posts) => {
     post.categories.map(cat => cat.toLowerCase()).includes(category.toLowerCase())
   );
 
-  return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${category} - Devin Schumacher</title>
-  <link rel="stylesheet" href="/assets/css/style.css">
-  <meta name="description" content="Posts about ${category}">
-</head>
-<body>
-  <header class="site-header">
-    <div class="container">
-      <a href="/" class="site-logo">Devin Schumacher</a>
-      <nav class="site-nav">
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/posts">Posts</a></li>
-          <li><a href="/categories">Categories</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container">
+  const content = `
     <h1>Category: ${category}</h1>
     <p>Found ${categoryPosts.length} post${categoryPosts.length !== 1 ? 's' : ''} in this category</p>
     
     <div class="posts-grid">
       ${categoryPosts.map(post => createPostCard(post)).join('')}
     </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
-      <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
-    </div>
-  </footer>
-</body>
-</html>
   `;
-};
 
-/**
- * Get all unique categories from posts
- * @param {Array} posts - List of post objects
- * @returns {Array} - List of unique categories
- */
-const getUniqueCategories = (posts) => {
-  const allCategories = posts.flatMap(post => post.categories);
-  return [...new Set(allCategories)];
+  return generatePage(
+    `${category} - Devin Schumacher`,
+    `Posts about ${category}`,
+    content
+  );
 };
 
 /**
@@ -129,48 +94,28 @@ const generateCategoriesIndexPage = (categories) => {
     </div>
   `).join('');
 
-  return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Categories - Devin Schumacher</title>
-  <link rel="stylesheet" href="/assets/css/style.css">
-  <meta name="description" content="Browse blog posts by category">
-</head>
-<body>
-  <header class="site-header">
-    <div class="container">
-      <a href="/" class="site-logo">Devin Schumacher</a>
-      <nav class="site-nav">
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/posts">Posts</a></li>
-          <li><a href="/categories">Categories</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container">
+  const content = `
     <h1>Categories</h1>
     <div class="categories-grid">
       ${categoriesHtml}
     </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
-      <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
-    </div>
-  </footer>
-</body>
-</html>
   `;
+
+  return generatePage(
+    'Categories - Devin Schumacher',
+    'Browse blog posts by category',
+    content
+  );
+};
+
+/**
+ * Get all unique categories from posts
+ * @param {Array} posts - List of post objects
+ * @returns {Array} - List of unique categories
+ */
+const getUniqueCategories = (posts) => {
+  const allCategories = posts.flatMap(post => post.categories);
+  return [...new Set(allCategories)];
 };
 
 /**
