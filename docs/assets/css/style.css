@@ -280,4 +280,75 @@ img {
     .profile-image {
         margin: 0 auto 2rem;
     }
+}
+
+/* Categories Styles */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.category-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--bg-color);
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.category-card h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+}
+
+.category-card h2 a {
+    color: var(--text-color);
+}
+
+.category-card h2 a:hover {
+    color: var(--primary-color);
+}
+
+.category-card p {
+    color: var(--text-light);
+    margin-bottom: 0;
+}
+
+.post-card-category {
+    background-color: var(--bg-alt);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    transition: background-color 0.3s ease;
+}
+
+.post-card-category:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.post-category {
+    background-color: var(--bg-alt);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    transition: background-color 0.3s ease;
+}
+
+.post-category:hover {
+    background-color: var(--primary-color);
+    color: white;
 } 

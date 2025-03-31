@@ -8,10 +8,10 @@ const fs = require('fs');
 const path = require('path');
 
 // Paths
-const postsJsonPath = path.join(__dirname, 'docs', 'database', 'posts.json');
-const postsOutputDir = path.join(__dirname, 'docs', 'posts');
+const postsJsonPath = path.join(__dirname, '..', 'docs', 'database', 'posts.json');
+const postsOutputDir = path.join(__dirname, '..', 'docs', 'posts');
 const postsIndexPath = path.join(postsOutputDir, 'index.html');
-const mainIndexPath = path.join(__dirname, 'docs', 'index.html');
+const mainIndexPath = path.join(__dirname, '..', 'docs', 'index.html');
 
 // Read the posts data
 const postsData = JSON.parse(fs.readFileSync(postsJsonPath, 'utf8'));
@@ -34,7 +34,7 @@ function generatePostHtml(post) {
   });
 
   const categoriesHtml = post.categories
-    .map(cat => `<span class="post-category">${cat}</span>`)
+    .map(cat => `<a href="../categories/${cat.toLowerCase()}" class="post-category">${cat}</a>`)
     .join(', ');
 
   return `<!DOCTYPE html>
@@ -58,8 +58,9 @@ function generatePostHtml(post) {
                 <ul>
                     <li><a href="../">Home</a></li>
                     <li><a href="../posts/" class="active">Posts</a></li>
-                    <li><a href="../about.html">About</a></li>
-                    <li><a href="../contact.html">Contact</a></li>
+                    <li><a href="../categories/">Categories</a></li>
+                    <li><a href="../about">About</a></li>
+                    <li><a href="../contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -118,7 +119,7 @@ function generateRecentPostsHtml(currentPostId, limit = 5) {
       });
       
       return `<li>
-        <a href="${post.slug}.html">${post.title}</a>
+        <a href="${post.slug}">${post.title}</a>
         <span class="post-date">${date}</span>
       </li>`;
     })
@@ -133,25 +134,26 @@ function generatePostCardHtml(post, isMainIndex = false) {
     day: 'numeric'
   });
 
+  // Define the base paths based on context
+  const categoryBase = isMainIndex ? 'categories/' : '../categories/';
+  
   const categoriesHtml = post.categories
-    .map(cat => `<span class="post-card-category">${cat}</span>`)
+    .map(cat => `<a href="${categoryBase}${cat.toLowerCase()}" class="post-card-category">${cat}</a>`)
     .join(', ');
 
-  // Use different paths depending on whether this is for the main index or the posts index
-  const postLink = isMainIndex ? `posts/${post.slug}.html` : `${post.slug}.html`;
-  const imagePath = isMainIndex ? post.image : `../${post.image}`;
-
+  // Use different paths depending on which index page we're generating
+  const postLink = isMainIndex ? `posts/${post.slug}` : `${post.slug}`;
+  
   return `<article class="post-card">
-    <a href="${postLink}">
-      <img src="${imagePath}" alt="${post.title}" class="post-card-image">
-    </a>
     <div class="post-card-content">
       <h3 class="post-card-title">
         <a href="${postLink}">${post.title}</a>
       </h3>
       <div class="post-card-meta">
         <span class="post-card-date">${date}</span>
-        <span class="post-card-categories">${categoriesHtml}</span>
+        <span class="post-card-categories">
+            ${categoriesHtml}
+        </span>
       </div>
       <p class="post-card-excerpt">${post.excerpt}</p>
       <a href="${postLink}" class="btn">Read More</a>
@@ -182,8 +184,9 @@ function generatePostsIndexHtml() {
                 <ul>
                     <li><a href="../">Home</a></li>
                     <li><a href="." class="active">Posts</a></li>
-                    <li><a href="../about.html">About</a></li>
-                    <li><a href="../contact.html">Contact</a></li>
+                    <li><a href="../categories/">Categories</a></li>
+                    <li><a href="../about">About</a></li>
+                    <li><a href="../contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -261,7 +264,7 @@ fs.writeFileSync(postsIndexPath, postsIndexHtml);
 
 // Update main index page
 console.log('Updating main index page...');
-const updatedMainIndexHtml = updateMainIndexHtml();
-fs.writeFileSync(mainIndexPath, updatedMainIndexHtml);
+const mainIndexHtml = updateMainIndexHtml();
+fs.writeFileSync(mainIndexPath, mainIndexHtml);
 
 console.log(`Done! Generated ${totalGenerated} post files.`); 

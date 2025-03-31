@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{CATEGORY_NAME}} | Categories | Devin Schumacher</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <meta name="description" content="{{CATEGORY_NAME}} articles and tutorials by Devin Schumacher">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="../" class="site-logo">Devin Schumacher</a>
+            <nav class="site-nav">
+                <ul>
+                    <li><a href="../">Home</a></li>
+                    <li><a href="../posts/">Posts</a></li>
+                    <li><a href="../categories" class="active">Categories</a></li>
+                    <li><a href="../about">About</a></li>
+                    <li><a href="../contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="page-header">
+            <h1>Category: {{CATEGORY_NAME}}</h1>
+            <p>{{CATEGORY_DESCRIPTION}}</p>
+        </section>
+
+        <section class="posts-list">
+            <div class="posts-grid">
+                {{POSTS_LIST}}
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Devin Schumacher. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html> 
