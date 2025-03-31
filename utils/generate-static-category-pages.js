@@ -6,6 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const config = require('./config');
 
 // Paths
 const postsJsonPath = path.join(__dirname, '..', 'docs', 'database', 'posts.json');
@@ -13,6 +14,9 @@ const categoriesOutputDir = path.join(__dirname, '..', 'docs', 'categories');
 const categoriesIndexPath = path.join(categoriesOutputDir, 'index.html');
 const categoryTemplatePath = path.join(__dirname, '..', 'docs', 'templates', 'category.html');
 const categoriesIndexTemplatePath = path.join(__dirname, '..', 'docs', 'templates', 'categories-index.html');
+
+// GitHub raw image URL base with placeholders from config
+const IMAGE_BASE_URL = `https://raw.githubusercontent.com/${config.github.organization}/${config.github.repository}/refs/heads/${config.github.branch}/images/`;
 
 // Read template files
 const categoryTemplate = fs.readFileSync(categoryTemplatePath, 'utf8');

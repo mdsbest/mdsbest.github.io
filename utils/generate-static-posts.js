@@ -6,12 +6,16 @@
 
 const fs = require('fs');
 const path = require('path');
+const config = require('./config');
 
 // Paths
 const postsJsonPath = path.join(__dirname, '..', 'docs', 'database', 'posts.json');
 const postsOutputDir = path.join(__dirname, '..', 'docs', 'posts');
 const postsIndexPath = path.join(postsOutputDir, 'index.html');
 const mainIndexPath = path.join(__dirname, '..', 'docs', 'index.html');
+
+// GitHub raw image URL base with placeholders from config
+const IMAGE_BASE_URL = `https://raw.githubusercontent.com/${config.github.organization}/${config.github.repository}/refs/heads/${config.github.branch}/images/`;
 
 // Read the posts data
 const postsData = JSON.parse(fs.readFileSync(postsJsonPath, 'utf8'));
@@ -36,6 +40,12 @@ function generatePostHtml(post) {
   const categoriesHtml = post.categories
     .map(cat => `<a href="../categories/${cat.toLowerCase()}" class="post-category">${cat}</a>`)
     .join(', ');
+
+  // Convert relative image path to GitHub raw URL
+  const imagePath = post.image.replace('assets/images/', IMAGE_BASE_URL);
+  
+  // Process post content to update image URLs
+  let processedContent = post.content.replace(/src="..\/assets\/images\//g, `src="${IMAGE_BASE_URL}`);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -74,11 +84,11 @@ function generatePostHtml(post) {
                     <time>${date}</time>
                     <div class="post-categories">${categoriesHtml}</div>
                 </div>
-                <img src="../${post.image}" alt="${post.title}" class="post-featured-image">
+                <img src="${imagePath}" alt="${post.title}" class="post-featured-image">
             </header>
             
             <div class="post-content">
-                ${post.content}
+                ${processedContent}
             </div>
         </article>
 
