@@ -1,20 +1,19 @@
 {
   "name": "mdsbest-github-io",
   "version": "1.0.0",
-  "description": "Personal website for Devin Schumacher",
-  "main": "index.js",
+  "description": "Static blog website with clean URLs",
   "scripts": {
     "start": "node utils/dev-server.js",
+    "convert": "node utils/convert-md-to-posts.js",
     "build:posts": "node utils/generate-static-posts.js",
     "build:categories": "node utils/generate-static-category-pages.js",
-    "build": "npm run build:posts && npm run build:categories",
-    "convert": "node utils/convert-md-to-posts.js"
+    "build": "pnpm build:posts && pnpm build:categories"
   },
   "author": "Devin Schumacher",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
     "gray-matter": "^4.0.3",
-    "marked": "^9.1.3"
+    "marked": "^5.0.2"
   }
 } 

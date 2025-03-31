@@ -34,167 +34,215 @@ if (!fs.existsSync(categoriesOutputDir)) {
   fs.mkdirSync(categoriesOutputDir, { recursive: true });
 }
 
-// Generate post card HTML for category pages
-function generatePostCardHtml(post, isCategoryPage = true) {
+/**
+ * Create a post card HTML for displaying in category pages
+ * @param {Object} post - Post object
+ * @returns {string} - HTML for post card
+ */
+const createPostCard = (post) => {
   const date = new Date(post.date).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
 
-  // Define the base paths for categories
-  const categoryBase = isCategoryPage ? '' : '../categories/';
-  
-  const categoriesHtml = post.categories
-    .map(cat => `<a href="${categoryBase}${cat.toLowerCase()}" class="post-card-category">${cat}</a>`)
-    .join(', ');
-
-  // Define the post link path
-  const postLink = `../posts/${post.slug}`;
-  
-  return `<article class="post-card">
-    <div class="post-card-content">
-      <h3 class="post-card-title">
-        <a href="${postLink}">${post.title}</a>
-      </h3>
-      <div class="post-card-meta">
-        <span class="post-card-date">${date}</span>
-        <span class="post-card-categories">
-            ${categoriesHtml}
-        </span>
+  return `
+    <article class="post-card">
+      <div class="post-card-content">
+        <h2 class="post-card-title">
+          <a href="/posts/${post.slug}">${post.title}</a>
+        </h2>
+        <div class="post-card-meta">
+          <span class="post-card-date">${date}</span>
+          ${post.categories.map(cat => `<span class="post-card-tag">${cat}</span>`).join('')}
+        </div>
+        <p class="post-card-excerpt">${post.excerpt}</p>
+        <a href="/posts/${post.slug}" class="read-more">Read More</a>
       </div>
-      <p class="post-card-excerpt">${post.excerpt}</p>
-      <a href="${postLink}" class="btn">Read More</a>
-    </div>
-  </article>`;
-}
+    </article>
+  `;
+};
 
-// Generate HTML for individual category page
-function generateCategoryPageHtml(category, categoryPosts) {
-  const postsListHtml = categoryPosts
-    .map(post => generatePostCardHtml(post))
-    .join('\n');
-
-  const capitalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
-  
-  let categoryDescription = '';
-  switch (category.toLowerCase()) {
-    case 'programming':
-      categoryDescription = 'Articles about programming languages, techniques, and best practices';
-      break;
-    case 'sql':
-      categoryDescription = 'Database management, queries, and SQL tutorials';
-      break;
-    case 'productivity':
-      categoryDescription = 'Tools and techniques to improve your workflow and efficiency';
-      break;
-    case 'data':
-      categoryDescription = 'Data analysis, management, and visualization';
-      break;
-    case 'tools':
-      categoryDescription = 'Software tools and utilities for developers';
-      break;
-    case 'web':
-      categoryDescription = 'Web development, design, and technologies';
-      break;
-    case 'security':
-      categoryDescription = 'Web security, encryption, and best practices';
-      break;
-    case 'ai':
-      categoryDescription = 'Artificial intelligence, machine learning, and neural networks';
-      break;
-    case 'audio':
-      categoryDescription = 'Audio processing, generation, and technologies';
-      break;
-    default:
-      categoryDescription = 'Articles related to ' + capitalizedCategory;
-  }
-
-  return categoryTemplate
-    .replace(/{{CATEGORY_NAME}}/g, capitalizedCategory)
-    .replace('{{CATEGORY_DESCRIPTION}}', categoryDescription)
-    .replace('{{POSTS_LIST}}', postsListHtml);
-}
-
-// Generate HTML for categories index page
-function generateCategoriesIndexHtml() {
-  // Extract all unique categories
-  const allCategories = [...new Set(sortedPosts.flatMap(post => post.categories))];
-  
-  // Generate HTML for categories with descriptions
-  const categoriesHtml = allCategories.map(category => {
-    const categorySlug = category.toLowerCase();
-    let categoryDescription = '';
-    
-    switch (categorySlug) {
-      case 'programming':
-        categoryDescription = 'Articles about programming languages, techniques, and best practices.';
-        break;
-      case 'sql':
-        categoryDescription = 'Database management, queries, and SQL tutorials.';
-        break;
-      case 'productivity':
-        categoryDescription = 'Tools and techniques to improve your workflow and efficiency.';
-        break;
-      case 'data':
-        categoryDescription = 'Data analysis, management, and visualization.';
-        break;
-      case 'tools':
-        categoryDescription = 'Software tools and utilities for developers.';
-        break;
-      case 'web':
-        categoryDescription = 'Web development, design, and technologies.';
-        break;
-      case 'security':
-        categoryDescription = 'Web security, encryption, and best practices.';
-        break;
-      case 'ai':
-        categoryDescription = 'Artificial intelligence, machine learning, and neural networks.';
-        break;
-      case 'audio':
-        categoryDescription = 'Audio processing, generation, and technologies.';
-        break;
-      default:
-        categoryDescription = 'Articles related to ' + category;
-    }
-    
-    return `
-                <div class="category-card">
-                    <h2><a href="${categorySlug}">${category}</a></h2>
-                    <p>${categoryDescription}</p>
-                </div>`;
-  }).join('\n                ');
-
-  return categoriesIndexTemplate.replace('{{CATEGORIES_LIST}}', categoriesHtml);
-}
-
-// Script execution starts here
-console.log('Generating category pages...');
-let totalGenerated = 0;
-
-// Extract all unique categories from posts
-const categories = [...new Set(sortedPosts.flatMap(post => post.categories))];
-
-// Generate categories index page
-console.log('Generating categories index page...');
-const categoriesIndexHtml = generateCategoriesIndexHtml();
-fs.writeFileSync(categoriesIndexPath, categoriesIndexHtml);
-totalGenerated++;
-console.log('Generated categories index page');
-
-// Generate individual category pages
-categories.forEach(category => {
-  const categorySlug = category.toLowerCase();
-  const categoryPosts = sortedPosts.filter(post => 
-    post.categories.map(cat => cat.toLowerCase()).includes(categorySlug)
+/**
+ * Generate HTML for category page
+ * @param {string} category - Category name
+ * @param {Array} posts - List of posts in this category
+ * @returns {string} - HTML content
+ */
+const generateCategoryPage = (category, posts) => {
+  // Filter posts that belong to this category
+  const categoryPosts = posts.filter(post => 
+    post.categories.map(cat => cat.toLowerCase()).includes(category.toLowerCase())
   );
-  
-  const categoryHtml = generateCategoryPageHtml(category, categoryPosts);
-  const categoryPath = path.join(categoriesOutputDir, `${categorySlug}.html`);
-  
-  fs.writeFileSync(categoryPath, categoryHtml);
-  totalGenerated++;
-  console.log(`Generated category page: ${categorySlug}.html`);
-});
 
-console.log(`Done! Generated ${totalGenerated} category pages.`); 
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${category} - My Blog</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="Posts about ${category}">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1 class="site-title"><a href="/">My Blog</a></h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="/categories">Categories</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Category: ${category}</h1>
+    <p>Found ${categoryPosts.length} post${categoryPosts.length !== 1 ? 's' : ''} in this category</p>
+    
+    <div class="posts-grid">
+      ${categoryPosts.map(post => createPostCard(post)).join('')}
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; <span id="current-year"></span> My Blog. All rights reserved.</p>
+      <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+    </div>
+  </footer>
+</body>
+</html>
+  `;
+};
+
+/**
+ * Get all unique categories from posts
+ * @param {Array} posts - List of post objects
+ * @returns {Array} - List of unique categories
+ */
+const getUniqueCategories = (posts) => {
+  const allCategories = posts.flatMap(post => post.categories);
+  return [...new Set(allCategories)];
+};
+
+/**
+ * Generate HTML for categories index page
+ * @param {Array} categories - List of unique categories
+ * @returns {string} - HTML content
+ */
+const generateCategoriesIndexPage = (categories) => {
+  const categoriesHtml = categories.map(category => `
+    <div class="category-card">
+      <h2 class="category-title">
+        <a href="/categories/${category.toLowerCase()}">${category}</a>
+      </h2>
+      <p>View all posts in this category</p>
+    </div>
+  `).join('');
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories - My Blog</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="Browse blog posts by category">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1 class="site-title"><a href="/">My Blog</a></h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="/categories">Categories</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Categories</h1>
+    <div class="categories-grid">
+      ${categoriesHtml}
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; <span id="current-year"></span> My Blog. All rights reserved.</p>
+      <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+    </div>
+  </footer>
+</body>
+</html>
+  `;
+};
+
+/**
+ * Main function to generate all category pages
+ */
+const generateCategoryPages = () => {
+  try {
+    // Read posts.json
+    const postsData = JSON.parse(fs.readFileSync(postsJsonPath, 'utf8'));
+    const posts = postsData.posts;
+
+    if (!posts || !Array.isArray(posts)) {
+      throw new Error('Invalid posts data. Expected an array of posts.');
+    }
+
+    console.log(`Found ${posts.length} posts to categorize`);
+
+    // Create categories directory if it doesn't exist
+    if (!fs.existsSync(categoriesOutputDir)) {
+      fs.mkdirSync(categoriesOutputDir, { recursive: true });
+    }
+
+    // Get all unique categories
+    const categories = getUniqueCategories(posts);
+    console.log(`Found ${categories.length} unique categories: ${categories.join(', ')}`);
+
+    // Generate category pages
+    categories.forEach(category => {
+      const categorySlug = category.toLowerCase();
+      const categoryHtml = generateCategoryPage(category, posts);
+      
+      // Create a directory for the category and place an index.html file in it for clean URLs
+      const categoryDirPath = path.join(categoriesOutputDir, categorySlug);
+      if (!fs.existsSync(categoryDirPath)) {
+        fs.mkdirSync(categoryDirPath, { recursive: true });
+      }
+      
+      const categoryFilePath = path.join(categoryDirPath, 'index.html');
+      fs.writeFileSync(categoryFilePath, categoryHtml);
+      console.log(`Generated category page for '${category}' at ${categoryFilePath}`);
+      
+      // Also create the old-style .html file for backward compatibility
+      const categoryHtmlPath = path.join(categoriesOutputDir, `${categorySlug}.html`);
+      fs.writeFileSync(categoryHtmlPath, categoryHtml);
+    });
+
+    // Generate categories index page
+    const categoriesIndexHtml = generateCategoriesIndexPage(categories);
+    const categoriesIndexPath = path.join(categoriesOutputDir, 'index.html');
+    fs.writeFileSync(categoriesIndexPath, categoriesIndexHtml);
+    console.log(`Generated categories index page at ${categoriesIndexPath}`);
+
+    console.log('Category pages generation completed!');
+  } catch (error) {
+    console.error('Error generating category pages:', error);
+  }
+};
+
+// Run the generator
+generateCategoryPages(); 
